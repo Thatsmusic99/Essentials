@@ -55,7 +55,10 @@ public class AlternativeCommandsHandler {
         final Map<String, Command> commands = new HashMap<>();
         for (final Map.Entry<String, Command> entry : ess.getKnownCommandsProvider().getKnownCommands().entrySet()) {
             if (entry.getValue() instanceof PluginIdentifiableCommand && ((PluginIdentifiableCommand) entry.getValue()).getPlugin().equals(plugin)) {
-                commands.put(entry.getKey(), entry.getValue());
+                // Don't try to let another command take over if it's not even registered in the first place
+                if (entry.getValue().isRegistered()) {
+                    commands.put(entry.getKey(), entry.getValue());
+                }
             }
         }
         return commands;
